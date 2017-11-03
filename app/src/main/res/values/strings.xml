@@ -19,5 +19,7 @@
     </string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="no_camera_title">Camera Unavailable</string>
+    <string name="no_camera_msg">This application cannot run in a device which does not have camera.</string>
     <string name="about_string">This application will allow an user to take a photo and save it to local database as BLOB data and retrieve it from the database.</string>
 </resources>

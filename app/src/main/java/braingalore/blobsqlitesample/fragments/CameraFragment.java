@@ -25,6 +25,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -47,6 +48,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +59,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import braingalore.blobsqlitesample.R;
+import braingalore.blobsqlitesample.database.DBHelperClass;
+import braingalore.blobsqlitesample.utils.ImageUtil;
 import braingalore.blobsqlitesample.views.AutoFitTextureView;
 
 public class CameraFragment extends Fragment
@@ -68,6 +72,7 @@ public class CameraFragment extends Fragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
+    private static DBHelperClass dbHelper;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -409,6 +414,7 @@ public class CameraFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        dbHelper = new DBHelperClass(getActivity());
         return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
     }
 
@@ -924,6 +930,9 @@ public class CameraFragment extends Fragment
             FileOutputStream output = null;
             try {
                 output = new FileOutputStream(mFile);
+                dbHelper.open();
+                dbHelper.insertImage(bytes);
+                dbHelper.close();
                 output.write(bytes);
             } catch (IOException e) {
                 e.printStackTrace();
